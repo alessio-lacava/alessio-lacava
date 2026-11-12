@@ -13,7 +13,7 @@ I recently completed an Intensive Professional Master Program in **Cyber Securit
 
 Self-directed projects to deepen my skills in Incident Response, Threat Hunting and Threat Intelligence.
 
-### 🛡️ Detection Lab (Splunk, Sysmon & OpenSSH) [PDF](https://github.com/acidrabbit86/acidrabbit86/blob/main/Splunk-Sysmon-Detection-Lab.pdf)
+### 🛡️ Detection Lab (Splunk, Sysmon & OpenSSH) [PDF](https://github.com/acidrabbit86/acidrabbit86/blob/main/Detection_Lab_Splunk_Sysmon.pdf)
 An isolated lab to observe Windows endpoint telemetry with **Sysmon** (Event ID 1 for processes, 3 for network connections, 13 for registry changes), forwarded to **Splunk Enterprise** via **Universal Forwarder** (port 9997). For each scenario I simulated the attack and wrote the detection rule:
 
 1. **SSH Brute Force:** attack with **Hydra** from Kali Linux against a test user; field extraction from OpenSSH logs using `rex` and a scheduled alert with a cron schedule.
