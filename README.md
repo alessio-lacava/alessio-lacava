@@ -1,5 +1,5 @@
 # Hi, I'm Alessio 👋
-### Aspiring SOC Analyst | Cyber Security Specialist
+### Aspiring SOC Analyst | Cyber Security Analyst
 
 🇮🇹 [Versione italiana](README.it.md)
 
