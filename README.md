@@ -13,17 +13,17 @@ I recently completed an Intensive Professional Master Program in **Cyber Securit
 
 Self-directed projects to deepen my skills in Incident Response, Threat Hunting and Threat Intelligence.
 
-### 🛡️ Mini-SOC Lab (Splunk, Sysmon & OpenSSH)
+### 🛡️ Detection Lab (Splunk, Sysmon & OpenSSH) [PDF](https://github.com/acidrabbit86/acidrabbit86/blob/main/Splunk-Sysmon-Detection-Lab.pdf)
 An isolated lab to observe Windows endpoint telemetry with **Sysmon** (Event ID 1 for processes, 3 for network connections, 13 for registry changes), forwarded to **Splunk Enterprise** via **Universal Forwarder** (port 9997). For each scenario I simulated the attack and wrote the detection rule:
 
 1. **SSH Brute Force:** attack with **Hydra** from Kali Linux against a test user; field extraction from OpenSSH logs using `rex` and a scheduled alert with a cron schedule.
 2. **Suspicious PowerShell:** detection of anomalous command lines (`ExecutionPolicy Bypass`, `DownloadString`) via Sysmon Event ID 1.
 3. **Persistence via Registry Run Key:** monitoring of `CurrentVersion\Run` (Sysmon Event ID 13), mapped to **MITRE ATT&CK T1547.001**.
 
-### 📄 Threat Brief: FortiBleed Campaign
+### 📄 Threat Brief: FortiBleed Campaign [PDF](https://github.com/acidrabbit86/acidrabbit86/blob/main/FortiBleed-Threat-Brief.pdf)
 Analysis of the compromise campaign targeting internet-exposed **Fortinet FortiGate** firewalls and SSL VPN gateways: attack chain (credential stuffing and infostealer dumps, exfiltration of user databases with legacy SHA-256 hashes, offline GPU cracking with Hashcat, administrator account lockout), **MITRE ATT&CK** mapping, detection indicators (anomalous accounts such as `forticloud-sync`, `support_fortinet`, `adminsslvpn`) and mitigations recommended by the FBI and Fortinet (restricting administrative access, disabling legacy hashes, phishing-resistant MFA).
 
-### 🎯 CTI Report: The Gentlemen Ransomware (Storm-2697)
+### 🎯 CTI Report: The Gentlemen Ransomware (Storm-2697) [PDF](https://github.com/acidrabbit86/acidrabbit86/blob/main/The-Gentlemen-Ransomware-CTI.pdf)
 Threat Intelligence report on the double-extortion RaaS group **The Gentlemen** (ArmCorp): analysis of the Go-based encryptor, the **GentleKiller** EDR-killing framework (BYOVD via vulnerable drivers such as `ThrottleBlood.sys`) and the worm-like lateral movement module. Includes a custom **YARA rule**, IoCs and Active Directory hardening strategies (SYSVOL protection, blocking vulnerable drivers with HVCI/WDAC).
 
 ---
