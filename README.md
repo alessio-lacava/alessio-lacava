@@ -20,6 +20,14 @@ An isolated lab to observe Windows endpoint telemetry with **Sysmon** (Event ID 
 2. **Suspicious PowerShell:** detection of anomalous command lines (`ExecutionPolicy Bypass`, `DownloadString`) via Sysmon Event ID 1.
 3. **Persistence via Registry Run Key:** monitoring of `CurrentVersion\Run` (Sysmon Event ID 13), mapped to **MITRE ATT&CK T1547.001**.
 
+### 🚨 Security Misconfiguration & SIEM Detection Gap Analysis (Wazuh, Nginx & Git) [PDF](https://github.com/alessio-lacava/alessio-lacava/blob/main/OWASP_A02_Wazuh_Lab_Report.pdf)[cite: 1, 2]
+
+An isolated Red/Blue Team lab (**Kali Linux** `10.0.2.15` vs **Ubuntu Server** `10.0.2.6` running **Nginx 1.28.3** and **Wazuh 4.10.5** all-in-one reading `/var/log/nginx/access.log` directly) analyzing **OWASP Top 10:2025 A02 (Security Misconfiguration)** and default SIEM detection gaps[cite: 2, 7]:
+
+1. **Exposed Web Root Files (`.env`, `config.bak`):** directory enumeration with **Gobuster** (`common.txt` vs `small.txt -x bak,txt,php`) and direct `curl` requests showing that default Wazuh rules flag `404` reconnaissance (`31516`, `31101`, `400` correlation) while rule `31108` (level `0`) ignores `200 OK` responses on sensitive files[cite: 3, 4, 5, 6, 7].
+2. **Exposed `.git` Repository & Commit History:** accidental exposure of `/var/www/html/.git` discovered with **Gobuster**, reconstructed via **git-dumper** and inspected with `git log -p` to recover a database credential present in an earlier commit even after removing it from `config.php`[cite: 10, 11, 13].
+3. **Custom Detection Rule & Remediation:** closed the `200 OK` gap with custom rule `100100` (level `12`, **MITRE ATT&CK T1083**) in `local_rules.xml` (~1–2s detection latency), removed exposed artifacts, and added Nginx hardening (`autoindex off`, blocking sensitive extensions)[cite: 8, 16, 17].
+
 ### 📄 Threat Brief: FortiBleed Campaign [PDF](https://github.com/alessio-lacava/alessio-lacava/blob/main/FortiBleed-Threat-Brief.pdf)
 Analysis of the compromise campaign targeting internet-exposed **Fortinet FortiGate** firewalls and SSL VPN gateways: attack chain (credential stuffing and infostealer dumps, exfiltration of user databases with legacy SHA-256 hashes, offline GPU cracking with Hashcat, administrator account lockout), **MITRE ATT&CK** mapping, detection indicators (anomalous accounts such as `forticloud-sync`, `support_fortinet`, `adminsslvpn`) and mitigations recommended by the FBI and Fortinet (restricting administrative access, disabling legacy hashes, phishing-resistant MFA).
 
@@ -40,14 +48,14 @@ Threat Intelligence report on the double-extortion RaaS group **The Gentlemen** 
 
 ## 🛠️ Tech Stack
 
-- **Systems & VMs:** Kali Linux, FLARE-VM, Security Onion, Windows Server 2022, Windows 10, pfSense, Cisco CyberOps Workstation
-- **SIEM & Monitoring:** Splunk Enterprise (SPL), Kibana, Sguil, Sysmon, Event Viewer
-- **Network & Forensics:** Wireshark, tcpdump, ProcMon, FakeNet-NG, HashMyFiles, Cisco Packet Tracer
-- **Malware Analysis:** ANY.RUN, VirusTotal
-- **Pentesting:** Metasploit, Nmap, Masscan, Nessus, Hydra
-- **Cracking & Reverse Engineering:** Hashcat, John the Ripper, CrackStation, Immunity Debugger, Mona.py
-- **Active Directory:** AD DS, GPO, NTFS ACLs
-- **Languages:** Python (including Google Gemini API), Bash, PowerShell, SQL, SPL, YARA
+* **Systems & VMs:** Kali Linux, FLARE-VM, Security Onion, Windows Server 2022, Windows 10, pfSense, Cisco CyberOps Workstation
+* **SIEM & Monitoring:** Splunk Enterprise (SPL), Wazuh, Kibana, Sguil, Sysmon, Event Viewer
+* **Network & Forensics:** Wireshark, tcpdump, ProcMon, FakeNet-NG, HashMyFiles, Cisco Packet Tracer
+* **Malware Analysis:** ANY.RUN, VirusTotal
+* **Pentesting & Recon:** Metasploit, Nmap, Masscan, Nessus, Hydra, Gobuster, git-dumper
+* **Cracking & Reverse Engineering:** Hashcat, John the Ripper, CrackStation, Immunity Debugger, Mona.py
+* **Active Directory:** AD DS, GPO, NTFS ACLs
+* **Languages:** Python (including Google Gemini API), Bash, PowerShell, SQL, SPL, YARA
 
 ---
 
