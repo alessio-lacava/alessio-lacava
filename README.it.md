@@ -20,6 +20,14 @@ Laboratorio isolato per osservare la telemetria endpoint Windows con **Sysmon** 
 2. **PowerShell sospetto:** rilevamento di command line anomale (`ExecutionPolicy Bypass`, `DownloadString`) tramite Sysmon Event ID 1.
 3. **Persistenza via Registry Run Key:** monitoraggio di `CurrentVersion\Run` (Sysmon Event ID 13), mappato su **MITRE ATT&CK T1547.001**.
 
+### 🚨 Security Misconfiguration & SIEM Detection Gap Analysis (Wazuh, Nginx & Git) [PDF](https://github.com/alessio-lacava/alessio-lacava/blob/main/OWASP_A02_Wazuh_Lab_Report.pdf)
+
+Laboratorio Red/Blue Team in ambiente isolato (**Kali Linux** `10.0.2.15` contro **Ubuntu Server** `10.0.2.6` con **Nginx 1.28.3** e **Wazuh 4.10.5** all-in-one che legge direttamente `/var/log/nginx/access.log`) per analizzare **OWASP Top 10:2025 A02 (Security Misconfiguration)** e i gap di detection delle regole predefinite del SIEM:
+
+1. **File esposti nella web root (`.env`, `config.bak`):** enumerazione con **Gobuster** (`common.txt` rispetto a `small.txt -x bak,txt,php`) e richieste dirette con `curl`, mostrando che le regole di default di Wazuh segnalano la ricognizione con `404` (`31516`, `31101`, correlazione `400`), mentre la regola `31108` (livello `0`) ignora le risposte `200 OK` sui file sensibili.
+2. **Repository `.git` esposto e cronologia dei commit:** esposizione accidentale di `/var/www/html/.git` individuata con **Gobuster**, ricostruzione locale tramite **git-dumper** e ispezione con `git log -p` per recuperare una credenziale di database presente in un commit precedente anche dopo averla rimossa da `config.php`.
+3. **Regola custom e remediation:** chiusura del gap sulle risposte `200 OK` con la regola custom `100100` (livello `12`, **MITRE ATT&CK T1083**) in `local_rules.xml` (~1–2 s di latenza), rimozione dei file esposti e hardening su Nginx (`autoindex off`, blocco delle estensioni sensibili).
+
 ### 📄 Threat Brief: FortiBleed Campaign [PDF](https://github.com/alessio-lacava/alessio-lacava/blob/main/FortiBleed-Threat-Brief.pdf)
 Analisi della campagna di compromissione contro firewall e gateway VPN SSL **Fortinet FortiGate** esposti a internet: catena d'attacco (credential stuffing e dump di infostealer, esfiltrazione dei database utenti con hash SHA-256 legacy, cracking offline su GPU con Hashcat, account lockout degli amministratori), mappatura **MITRE ATT&CK**, indicatori di detection (account anomali come `forticloud-sync`, `support_fortinet`, `adminsslvpn`) e mitigazioni indicate da FBI e Fortinet (limitazione accesso amministrativo, disattivazione hash legacy, MFA resistente al phishing).
 
@@ -40,14 +48,14 @@ Report di Threat Intelligence sul gruppo RaaS **The Gentlemen** (ArmCorp), attiv
 
 ## 🛠️ Tech Stack
 
-- **Sistemi & VM:** Kali Linux, FLARE-VM, Security Onion, Windows Server 2022, Windows 10, pfSense, Cisco CyberOps Workstation
-- **SIEM & Monitoring:** Splunk Enterprise (SPL), Kibana, Sguil, Sysmon, Event Viewer
-- **Network & Forensics:** Wireshark, tcpdump, ProcMon, FakeNet-NG, HashMyFiles, Cisco Packet Tracer
-- **Malware Analysis:** ANY.RUN, VirusTotal
-- **Pentesting:** Metasploit, Nmap, Masscan, Nessus, Hydra
-- **Cracking & Reverse Engineering:** Hashcat, John the Ripper, CrackStation, Immunity Debugger, Mona.py
-- **Active Directory:** AD DS, GPO, ACL NTFS
-- **Linguaggi:** Python (anche con Google Gemini API), Bash, PowerShell, SQL, SPL, YARA
+* **Sistemi & VM:** Kali Linux, FLARE-VM, Security Onion, Windows Server 2022, Windows 10, pfSense, Cisco CyberOps Workstation
+* **SIEM & Monitoraggio:** Splunk Enterprise (SPL), Wazuh, Kibana, Sguil, Sysmon, Event Viewer
+* **Rete & Forensics:** Wireshark, tcpdump, ProcMon, FakeNet-NG, HashMyFiles, Cisco Packet Tracer
+* **Analisi Malware:** ANY.RUN, VirusTotal
+* **Pentesting & Recon:** Metasploit, Nmap, Masscan, Nessus, Hydra, Gobuster, git-dumper
+* **Cracking & Reverse Engineering:** Hashcat, John the Ripper, CrackStation, Immunity Debugger, Mona.py
+* **Active Directory:** AD DS, GPO, NTFS ACLs
+* **Linguaggi:** Python (inclusa Google Gemini API), Bash, PowerShell, SQL, SPL, YARA
 
 ---
 
